@@ -10,9 +10,7 @@ var dayHours = [];
 for (var i = 0; i < 24; i++) {
   dayHours.push(i + 1);
 }
-console.log(dayHours);
 var scheduleSlots = dayHours.length * 1;
-console.log(scheduleSlots);
 
 var timeBlockEl = document.createElement("div");
 timeBlockEl.className = "time-block";
@@ -20,19 +18,62 @@ timeBlockEl.innerHTML = "";
 blockContainerEl.appendChild(timeBlockEl);
 
 for (var i = 0; i < scheduleSlots; i++) {
+  // create a row for timeslot
   var blockRowEl = document.createElement("div");
   blockRowEl.className = "row";
   timeBlockEl.appendChild(blockRowEl);
+  // set slot hour
   var hourEl = document.createElement("p");
   hourEl.className = "hour col-1 text-right pt-3";
   hourEl.innerHTML = i + ":00";
   blockRowEl.appendChild(hourEl);
-  var desciptionEl = document.createElement("p");
-  desciptionEl.className = "description col-9 mb-0 future";
-  desciptionEl.innerHTML = "";
-  blockRowEl.appendChild(desciptionEl);
+  // create description box and set data- hour Id
+  var descriptionEl = document.createElement("p");
+  descriptionEl.className = "description col-9 mb-0";
+  descriptionEl.innerHTML = "";
+  descriptionEl.setAttribute("data-hour-id", i);
+  blockRowEl.appendChild(descriptionEl);
+  // set appropiate description color per past, present, future
+  pastPresentFutureCheck(descriptionEl);
+  // create save button
   var saveEl = document.createElement("button");
   saveEl.className = "saveBtn p-4";
   saveEl.innerHTML = "💾";
   blockRowEl.appendChild(saveEl);
+}
+
+$(".description").dblclick("p", function (e) {
+  e.preventDefault();
+
+  var text = $(this).text().trim();
+  console.log(text);
+  var textInput = $("<textarea>")
+    .addClass(e.target.classList.value + " text-area")
+    .val(text);
+  $(this).replaceWith(textInput);
+  textInput.trigger("focus");
+
+  $(".saveBtn").click(function (e) {
+    e.preventDefault();
+    text = $(textInput).val();
+    console.log(text);
+    var description = $("<p>")
+      .addClass(textInput[0].classList.value)
+      .text(text);
+    $(textInput).replaceWith(description);
+    console.log("saved");
+  });
+});
+
+function pastPresentFutureCheck(element) {
+  if ($(element).data("hourId") < dateObj.getHours()) {
+    console.log("past");
+    element.classList.add("past");
+  } else if ($(element).data("hourId") === dateObj.getHours()) {
+    console.log("present");
+    element.classList.add("present");
+  } else {
+    console.log("future");
+    element.classList.add("future");
+  }
 }

@@ -46,7 +46,6 @@ $(".description").dblclick("p", function (e) {
   e.preventDefault();
 
   var text = $(this).text().trim();
-  console.log(text);
   var textInput = $("<textarea>")
     .addClass(e.target.classList.value + " text-area")
     .val(text);
@@ -56,24 +55,19 @@ $(".description").dblclick("p", function (e) {
   $(".saveBtn").click(function (e) {
     e.preventDefault();
     text = $(textInput).val();
-    console.log(text);
     var description = $("<p>")
       .addClass(textInput[0].classList.value)
       .text(text);
     $(textInput).replaceWith(description);
-    console.log("saved");
   });
 });
 
 function pastPresentFutureCheck(element) {
   if ($(element).data("hourId") < dateObj.getHours()) {
-    console.log("past");
     element.classList.add("past");
   } else if ($(element).data("hourId") === dateObj.getHours()) {
-    console.log("present");
     element.classList.add("present");
   } else {
-    console.log("future");
     element.classList.add("future");
   }
 }
